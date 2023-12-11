@@ -1,12 +1,31 @@
 'use client'
-import { useAppSelector } from '@/redux/hooks/hooks';
+import { menuItems } from '@/constants/menuItems';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks/hooks';
+import { actionItemClick } from '@/redux/slice/Menu';
 import React, { useEffect, useLayoutEffect, useRef } from 'react'
 
 const Board = () => {
+  const dispatch = useAppDispatch()
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const shouldDraw = useRef(false);
   const activeMenuItem = useAppSelector((state) => state.menu.active);
+  const actionMenuItem = useAppSelector((state) => state.menu.actionMenuItem);
   const {color, size} = useAppSelector((state) => state.toolbox[activeMenuItem]);
+
+  useEffect(() => {
+    if (!canvasRef.current) return;
+    const canvas = canvasRef.current;
+    // const ctx = canvas.getContext('2d');
+
+      if(actionMenuItem === menuItems.download) {
+        const url = canvas.toDataURL();
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = 'sketch.jpg'
+        anchor.click()
+      }
+      dispatch(actionItemClick(null))
+  },[actionMenuItem, dispatch])
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -32,8 +51,9 @@ const Board = () => {
       ctx?.beginPath()
       ctx?.moveTo(x, y)
     }
-    const drwaLine = (x: number, y: number) => {
+    const drawLine = (x: number, y: number) => {
       ctx?.lineTo(x, y)
+      ctx?.stroke()
     }
     const handleMouseDown = (e: MouseEvent) => {
       shouldDraw.current = true
@@ -41,7 +61,7 @@ const Board = () => {
     }
     const handleMouseMove = (e: MouseEvent) => {
       if (!shouldDraw.current ) return;
-      drwaLine(e.clientX, e.clientY)
+      drawLine(e.clientX, e.clientY)
     }
     const handleMouseUp = () => {
       shouldDraw.current = false
