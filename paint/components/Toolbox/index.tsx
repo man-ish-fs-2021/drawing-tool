@@ -2,15 +2,30 @@
 import React from "react";
 import styles from "./index.module.css";
 import { brushColors } from "@/constants/colors";
-import { useAppSelector } from "@/redux/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks/hooks";
 import { menuItems } from "@/constants/menuItems";
+import { changeBrushSize, changeColor } from "@/redux/slice/Toolbox";
+import cx from "classnames";
 
 const Toolbox = () => {
+  const dispatch = useAppDispatch();
   const activeMenuItem = useAppSelector((state) => state.menu.active);
+  const { color } = useAppSelector((state) => state.toolbox[activeMenuItem]);
+  console.log("toolbox",{color, activeMenuItem})
   const showColor = activeMenuItem === menuItems.pencil;
   const showBrush =
     activeMenuItem === menuItems.pencil || activeMenuItem === menuItems.eraser;
-  const updateSize = () => {};
+  const updateSize = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(
+      changeBrushSize({
+        item: activeMenuItem,
+        size: e.target.value,
+      })
+    );
+  };
+  const updateColor = (color: string) => {
+    dispatch(changeColor({item: activeMenuItem, color}));
+  };
   return (
     <div className={styles.toolboxContainer}>
       {showColor && (
@@ -20,8 +35,11 @@ const Toolbox = () => {
             {Object.values(brushColors).map((backgroundColor) => (
               <div
                 key={backgroundColor}
-                className={styles.colorBox}
+                className={cx(styles.colorBox, {
+                  [styles.active]: backgroundColor === color,
+                })}
                 style={{ backgroundColor }}
+                onClick={() => updateColor(backgroundColor)}
               />
             ))}
           </div>

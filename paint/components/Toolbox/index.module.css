@@ -12,7 +12,7 @@
         @apply h-5 w-5 mr-1 rounded-sm cursor-pointer;
 
         &:hover,
-        .active {
+        &.active {
           border: theme("border.border2");
         }
       }

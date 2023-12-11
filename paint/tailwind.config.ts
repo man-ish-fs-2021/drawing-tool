@@ -25,7 +25,7 @@ const config: Config = {
       },
       border: {
         border1: `1px solid ${colors.neutral[800]}`,
-        border2: `1.5px solid ${colors.neutral[500]}`,
+        border2: `2px solid ${colors.neutral[500]}`,
       },
       backgroundColor: {
         background1: "rgba(255, 255, 255, 0.9)",
