@@ -10,7 +10,7 @@ import cx from "classnames";
 const Toolbox = () => {
   const dispatch = useAppDispatch();
   const activeMenuItem = useAppSelector((state) => state.menu.active);
-  const { color } = useAppSelector((state) => state.toolbox[activeMenuItem]);
+  const { color , size} = useAppSelector((state) => state.toolbox[activeMenuItem]);
   console.log("toolbox",{color, activeMenuItem})
   const showColor = activeMenuItem === menuItems.pencil;
   const showBrush =
@@ -56,6 +56,7 @@ const Toolbox = () => {
               max={10}
               step={1}
               onChange={updateSize}
+              value={size}
             />
           </div>
         </div>
